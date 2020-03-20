@@ -1,0 +1,5 @@
+This directory contains tf-kaldi recipes for SITW set.
+
+v1: Standard SITW recipe.
+fine-tuning: Finetuning a pre-trained model with arcsoftmax loss function.
+inference: Obtain speaker feature vectors through existing model.

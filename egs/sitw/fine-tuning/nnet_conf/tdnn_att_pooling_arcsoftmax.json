@@ -1,0 +1,64 @@
+{
+  "num_gpus": 2,
+  "seed": 0,
+  "network_type": "tdnn",
+  "batch_type": "softmax",
+  "embedding_node": "tdnn6_dense",
+  "last_layer_no_bn": false,
+  "last_layer_linear":true,
+  "feature_norm": false,
+
+  "loss_func": "additive_angular_margin_softmax",
+  "arcsoftmax_m": 0.25,
+  "arcsoftmax_lambda_min": 0,
+  "arcsoftmax_lambda_base": 1000,
+  "arcsoftmax_lambda_gamma": 0.00001,
+  "arcsoftmax_lambda_power": 5,
+  "clip_gradient_norm": 3,
+  "max_queue_size": 10,
+
+  "noupdate_var_list": [],
+  "noload_var_list": ["attention"],
+
+  "num_nodes_pooling_layer": 1500,
+  "pooling_type": "self_attention",
+  "att_key_input": "tdnn4_relu",
+  "att_key_num_nodes": [1500, 1500],
+  "att_key_network_type": 1,
+  "att_value_input": "tdnn5_relu",
+  "att_value_num_nodes": [],
+  "att_value_network_type": 0,
+  "att_apply_nonlinear": false,
+  "att_use_scale": true,
+  "att_num_heads": 1,
+  "att_split_value": true,
+  "att_split_key": true,
+  "att_penalty_term": 0,
+
+  "learning_rate": 0.001,
+  "Another option": "learning_rate=0.001, optimizer=momentum, momentum=0.9",
+
+  "use_nesterov": false,
+  "clip_gradient": false,
+
+  "weight_l2_regularizer": 1e-2,
+  "batchnorm_momentum": 0.99,
+
+  "num_epochs": 150,
+  "num_steps_per_epoch": 30000,
+  "reduce_lr_epochs": 4,
+  "show_training_progress": 100,
+  "keep_checkpoint_max": 100,
+  "save_summary_steps": 10000,
+  "save_checkpoints_steps": 30000,
+  "valid_max_iterations": 1000,
+
+  "num_parallel_datasets": 8,
+  "num_speakers_per_batch": 64,
+  "num_segments_per_speaker": 1,
+  "min_segment_len": 200,
+  "max_segment_len": 400,
+
+  "early_stop_epochs": 10,
+  "min_learning_rate": 9e-7
+  }
