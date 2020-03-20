@@ -9,7 +9,7 @@ import numpy as np
 import itertools
 from model.common import l2_scaling, shape_list
 from model.tdnn import tdnn, tdnns, etdnn
-from model.resnet import resnet_18
+from model.resnet import resnet_18 resnet_34
 from model.loss import softmax
 from model.loss import asoftmax, additive_margin_softmax, additive_angular_margin_softmax
 from model.loss import semihard_triplet_loss, angular_triplet_loss, e2e_valid_loss, generalized_angular_triplet_loss
@@ -106,6 +106,8 @@ class Trainer(object):
             self.network = etdnn
         elif params.network_type == "resnet_18":
             self.network = resnet_18
+        elif params.network_type == "resnet_34":
+            self.network = resnet_34
         else:
             raise NotImplementedError("Not implement %s network" % params.network_type)
 
