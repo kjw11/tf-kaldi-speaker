@@ -210,22 +210,22 @@ fi
 
 if [ $stage -le 10 ]; then
   # Compute the mean.vec used for centering.
-  $train_cmd $nnetdir/xvectors_train_comb/log/compute_mean.log \
-    ivector-mean scp:$nnetdir/xvectors_train_comb/xvector.scp \
-    $nnetdir/xvectors_train_comb/mean.vec || exit 1;
+  $train_cmd $nnetdir/xvectors_train_combined_200k/log/compute_mean.log \
+    ivector-mean scp:$nnetdir/xvectors_train_combined_200k/xvector.scp \
+    $nnetdir/xvectors_train_combined_200k/mean.vec || exit 1;
 
   # Use LDA to decrease the dimensionality prior to PLDA.
   lda_dim=128
-  $train_cmd $nnetdir/xvectors_train_comb/log/lda.log \
+  $train_cmd $nnetdir/xvectors_train_combined_200k/log/lda.log \
     ivector-compute-lda --total-covariance-factor=0.0 --dim=$lda_dim \
-    "ark:ivector-subtract-global-mean scp:$nnetdir/xvectors_train_comb/xvector.scp ark:- |" \
-    ark:$data/train_comb/utt2spk $nnetdir/xvectors_train_comb/transform.mat || exit 1;
+    "ark:ivector-subtract-global-mean scp:$nnetdir/xvectors_train_combined_200k/xvector.scp ark:- |" \
+    ark:$data/train_comb/utt2spk $nnetdir/xvectors_train_combined_200k/transform.mat || exit 1;
 
   # Train the PLDA model.
-  $train_cmd $nnetdir/xvectors_train_comb/log/plda.log \
+  $train_cmd $nnetdir/xvectors_train_combined_200k/log/plda.log \
     ivector-compute-plda ark:$data/train_comb/spk2utt \
-    "ark:ivector-subtract-global-mean scp:$nnetdir/xvectors_train_comb/xvector.scp ark:- | transform-vec $nnetdir/xvectors_train_comb/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |" \
-    $nnetdir/xvectors_train_comb/plda || exit 1;
+    "ark:ivector-subtract-global-mean scp:$nnetdir/xvectors_train_combined_200k/xvector.scp ark:- | transform-vec $nnetdir/xvectors_train_combined_200k/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |" \
+    $nnetdir/xvectors_train_combined_200k/plda || exit 1;
 fi
 
 if [ $stage -le 11 ]; then
@@ -233,9 +233,9 @@ if [ $stage -le 11 ]; then
   $train_cmd $nnetdir/scores/log/voxceleb_eval_scoring.log \
     ivector-plda-scoring --normalize-length=true \
     --num-utts=ark:$nnetdir/xvectors_eval_enroll/num_utts.ark \
-    "ivector-copy-plda --smoothing=0.0 $nnetdir/xvectors_train_comb/plda - |" \
-    "ark:ivector-mean ark:$data/eval_enroll/spk2utt scp:$nnetdir/xvectors_eval_enroll/xvector.scp ark:- | ivector-subtract-global-mean $nnetdir/xvectors_train_comb/mean.vec ark:- ark:- | transform-vec $nnetdir/xvectors_train_comb/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |" \
-    "ark:ivector-subtract-global-mean $nnetdir/xvectors_train_comb/mean.vec scp:$nnetdir/xvectors_eval_test/xvector.scp ark:- | transform-vec $nnetdir/xvectors_train_comb/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |" \
+    "ivector-copy-plda --smoothing=0.0 $nnetdir/xvectors_train_combined_200k/plda - |" \
+    "ark:ivector-mean ark:$data/eval_enroll/spk2utt scp:$nnetdir/xvectors_eval_enroll/xvector.scp ark:- | ivector-subtract-global-mean $nnetdir/xvectors_train_combined_200k/mean.vec ark:- ark:- | transform-vec $nnetdir/xvectors_train_combined_200k/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |" \
+    "ark:ivector-subtract-global-mean $nnetdir/xvectors_train_combined_200k/mean.vec scp:$nnetdir/xvectors_eval_test/xvector.scp ark:- | transform-vec $nnetdir/xvectors_train_combined_200k/transform.mat ark:- ark:- | ivector-normalize-length ark:- ark:- |" \
     "cat '$eval_trials_core' | cut -d\  --fields=1,2 |" $nnetdir/scores/voxceleb_eval_scores || exit 1;
 
   echo -e "\nVox-Celeb Eval Core:";
