@@ -151,7 +151,7 @@ def identity_block(input_features, kernel_sizes, filters, params, is_training, r
 
 def resnet_34(features, params, is_training=None, reuse_variables=None, aux_features=None):
     """ Build a ResNet.
-        Modified ResNet-18, the blocks are: [3/32, 3/32], [3/64, 3/64], [3/128, 3/128], [3/256, 3/256]
+        Modified ResNet-34, the blocks are: [3/32, 3/32], [3/64, 3/64], [3/128, 3/128], [3/256, 3/256]
         The default number of blocks: [3, 4, 6, 3]
         The last 3 blocks can downsample the features.
         N fully-connected layers are appended to the output the res blocks.
@@ -169,6 +169,7 @@ def resnet_34(features, params, is_training=None, reuse_variables=None, aux_feat
 
         ResNet-18: 13.5M
         ResNet-34: 23.6M
+        Modified ResNet-34: 7.6M
         ResNet-50: 16.1M
         ResNet-101: 28.4M
 
@@ -293,7 +294,7 @@ def resnet_34(features, params, is_training=None, reuse_variables=None, aux_feat
 
         num_params = 3*3*32 + (2*3*3*32*32*params.resnet_blocks[0] + 32*32) + \
                      (3*3*32*64 + 3*3*64*64 + 32*64 + 2*3*3*64*64*(params.resnet_blocks[1]-1)) + \
-                     (3*3*64*128 + 3*3*128*128 + 164*128 + 2*3*3*128*128*(params.resnet_blocks[2]-1)) + \
+                     (3*3*64*128 + 3*3*128*128 + 64*128 + 2*3*3*128*128*(params.resnet_blocks[2]-1)) + \
                      (3*3*128*256 + 3*3*256*256 + 128*256 + 2*3*3*256*256*(params.resnet_blocks[3]-1)) + \
                      (1*5*512*512 + 512*512 + 512*1500)
 
